@@ -8,6 +8,7 @@ from types import CodeType
 from typing import List, Callable, Dict, Union, Set
 from dataclasses import dataclass
 import contextlib
+import functools
 
 import depyf
 from depyf.decompiler import DecompilationError
@@ -47,6 +48,7 @@ class CodeProxy:
         CodeProxy.instances[new_name] = None
         return new_name
 
+    @functools.lru_cache(maxsize=None)
     @staticmethod
     def decompile_with_name(code: CodeType, name: str):
         if hasattr(code, "__code__"):
@@ -299,7 +301,6 @@ def get_code_owner(fn):
     `a.func.__code__` is read-only. `A.func.__code__` is writable.
     We can change the code object via `a.func.__func__.__code__`.
     """
-    import functools
     while True:
         if hasattr(fn, "__func__"):
             # deal with bounded function
