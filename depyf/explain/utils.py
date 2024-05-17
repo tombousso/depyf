@@ -52,11 +52,10 @@ class CodeProxy:
         if hasattr(code, "__code__"):
             code = code.__code__
         if code.co_name.startswith("transformed_code_") or code.co_name.startswith("__transformed_code_"):
-            src = open(code.co_filename).read()
             new_name = code.co_name
         else:
             new_name = CodeProxy.get_new_name(name)
-            src = decompile_ensure(code, new_name)
+        src = decompile_ensure(code, new_name)
         self = CodeProxy(src)
         self.name = new_name
         self.code = f"""<details>
